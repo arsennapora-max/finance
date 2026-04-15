@@ -267,7 +267,7 @@
         <button class="seg-btn" id="tExp" onclick="setFormType('expense')">− Витрата</button>
       </div>
       <input type="number" id="amtInput" placeholder="CA$" min="0" step="0.01">
-      <input type="text" id="descInput" placeholder="Опис (необов'язково для доходу)">
+      <input type="text" id="descInput" placeholder="Опис (необов'язково для доходу)" oninput="autoDetectCategory()">
       <select id="catSel" onchange="onCatChange()"></select>
       <div class="seg" style="min-width:110px">
         <button class="seg-btn on-a" id="pArs" onclick="setFormPerson('Арсен')">Арсен</button>
@@ -501,15 +501,60 @@ function setFormPerson(p) {
   document.getElementById('pArs').className='seg-btn'+(p==='Арсен'?' on-a':'');
   document.getElementById('pLyd').className='seg-btn'+(p==='Люда'?' on-l':'');
 }
-function onCatChange() {
-  // for income: if desc is empty or was auto-filled, update it with category
-  if (formType==='income') {
-    var desc=document.getElementById('descInput').value.trim();
-    var cat=document.getElementById('catSel').value;
-    // auto-fill only if empty
-    if (!desc) document.getElementById('descInput').value='';
+function onCatChange() {}
+
+// ── Auto-detect category from description ──
+var CAT_KEYWORDS = {
+  'Транспорт':    ['заправка','бензин','газ','паркінг','парковка','метро','автобус','таксі','uber','uklon','bolt','поїзд','літак','авіа','маршрутка','трамвай','trolley','transport','car wash','мийка','страховка авто','техогляд'],
+  'Groceries':    ['groceries','продукти','superstore','walmart','costco','metro','sobeys','loblaws','no frills','food basics','iga','maxi','зелений','ринок','базар','овочі','фрукти','м'ясо','молоко','хліб','супермаркет'],
+  'Ресторани':    ['ресторан','кафе','піца','pizza','burger','макдональдс','mcdonalds','kfc','subway','sushi','rolls','суші','ролли','бар','паб','pub','кавярня','coffee','starbucks','tim hortons','тімс','shawarma','шаурма','їжа','обід','вечеря','сніданок','доставка'],
+  'Житло & Utilities': ['оренда','rent','квартира','комунальні','hydro','електрика','вода','інтернет','internet','rogers','bell','telus','shaw','газ для дому','страховка житла','condo','mortgage','іпотека'],
+  'Одяг':         ['одяг','zara','h&m','nike','adidas','взуття','куртка','джинси','сорочка','пальто','шопінг','shopping','clothes','fashion'],
+  'Здоров'я':    ['аптека','pharmacy','shoppers','лікар','doctor','dentist','стоматолог','ліки','таблетки','аналізи','clinic','hospital','лікарня','gym','фітнес','fitness','спортзал'],
+  'Розваги':      ['кіно','cinema','concert','концерт','netflix','spotify','apple','disney','театр','виставка','музей','парк','атракціони','bowling','більярд','game','ігри','xbox','playstation','steam'],
+  'Освіта':       ['курси','course','udemy','навчання','університет','коледж','college','university','книга','book','підручник','school','школа'],
+  'Технології':   ['apple','iphone','samsung','laptop','ноутбук','телефон','phone','планшет','tablet','gadget','гаджет','amazon','best buy','canada computers','electronics'],
+  'Спорт':        ['спорт','sport','футбол','хокей','basketball','теніс','басейн','pool','велосипед','bike','йога','yoga','бокс','wrestling'],
+  'Подарунок':    ['подарунок','gift','present','день народження','birthday','surprise'],
+  'Зарплата':     ['зарплата','salary','зп','payroll','паychеck'],
+  'Фріланс':      ['фріланс','freelance','проект','project','клієнт','client'],
+  'Інвестиції':   ['інвестиції','invest','акції','crypto','крипто','bitcoin','etf','rrsp','tfsa']
+};
+
+function autoDetectCategory() {
+  if (formType === 'income') return; // only for expenses
+  var desc = document.getElementById('descInput').value.toLowerCase().trim();
+  if (!desc) return;
+  var sel = document.getElementById('catSel');
+  var detected = null;
+  // check each category
+  var cats = Object.keys(CAT_KEYWORDS);
+  for (var i=0; i<cats.length; i++) {
+    var cat = cats[i];
+    var keywords = CAT_KEYWORDS[cat];
+    for (var j=0; j<keywords.length; j++) {
+      if (desc.indexOf(keywords[j]) !== -1) {
+        detected = cat;
+        break;
+      }
+    }
+    if (detected) break;
+  }
+  if (detected) {
+    // find option in select and set it
+    var opts = sel.options;
+    for (var k=0; k<opts.length; k++) {
+      if (opts[k].value === detected) {
+        sel.selectedIndex = k;
+        // flash the select to show it changed
+        sel.style.boxShadow = '0 0 0 2px rgba(10,132,255,0.5)';
+        setTimeout(function(){ sel.style.boxShadow=''; }, 800);
+        break;
+      }
+    }
   }
 }
+
 function populateCats() {
   var cats=formType==='income'?CATS_INC:CATS_EXP;
   document.getElementById('catSel').innerHTML=cats.map(function(c){ return '<option>'+c+'</option>'; }).join('');
