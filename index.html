@@ -7,480 +7,175 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg:        #000000;
-    --bg1:       #0a0a0a;
-    --bg2:       #141414;
-    --bg3:       #1c1c1e;
-    --bg4:       #2c2c2e;
-    --sep:       rgba(255,255,255,0.08);
-    --sep2:      rgba(255,255,255,0.05);
-    --text:      #ffffff;
-    --text2:     rgba(255,255,255,0.6);
-    --text3:     rgba(255,255,255,0.3);
-    --green:     #30d158;
-    --red:       #ff453a;
-    --blue:      #0a84ff;
-    --pill-r:    12px;
-    --card-r:    18px;
-    --btn-h:     44px;
+    --bg:#000; --bg3:#1c1c1e; --bg4:#2c2c2e;
+    --sep:rgba(255,255,255,0.08); --sep2:rgba(255,255,255,0.05);
+    --text:#fff; --text2:rgba(255,255,255,0.6); --text3:rgba(255,255,255,0.3);
+    --green:#30d158; --red:#ff453a; --blue:#0a84ff;
+    --card-r:18px; --btn-h:44px;
   }
+  html { font-size:16px; -webkit-font-smoothing:antialiased; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; min-height:100vh; padding-bottom:80px; }
 
-  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    min-height: 100vh;
-    padding-bottom: 80px;
-  }
+  header { padding:52px 28px 0; max-width:980px; margin:0 auto; display:flex; align-items:flex-start; justify-content:space-between; }
+  .logo-area h1 { font-size:2rem; font-weight:700; letter-spacing:-0.04em; }
+  .logo-area p  { font-size:0.78rem; color:var(--text3); margin-top:4px; }
+  .sync-pill { display:flex; align-items:center; gap:6px; background:var(--bg3); border:1px solid var(--sep); border-radius:20px; padding:6px 12px; font-size:0.72rem; color:var(--text2); font-weight:500; white-space:nowrap; }
+  .charts-btn { display:flex; align-items:center; gap:6px; background:var(--bg3); border:1px solid var(--sep); border-radius:20px; padding:8px 16px; color:var(--blue); font-size:0.82rem; font-weight:600; text-decoration:none; transition:opacity .15s; }
+  .charts-btn:hover { opacity:.75; }
+  .hdr-right { display:flex; align-items:center; gap:10px; }
+  .sync-dot { width:6px; height:6px; border-radius:50%; background:var(--text3); transition:background .4s; flex-shrink:0; }
+  .sync-dot.online  { background:var(--green); box-shadow:0 0 6px var(--green); }
+  .sync-dot.syncing { background:#ffd60a; }
+  .sync-dot.error   { background:var(--red); }
 
-  /* ── HEADER ── */
-  header {
-    padding: 52px 28px 0;
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  .logo-area h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    color: var(--text);
-    line-height: 1;
-  }
-  .logo-area p {
-    font-size: 0.8rem;
-    color: var(--text3);
-    margin-top: 5px;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-  }
-  .sync-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg3);
-    border: 1px solid var(--sep);
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 0.72rem;
-    color: var(--text2);
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-  .sync-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--text3);
-    transition: background 0.4s;
-    flex-shrink: 0;
-  }
-  .sync-dot.online  { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .sync-dot.syncing { background: #ffd60a; }
-  .sync-dot.error   { background: var(--red); }
+  main { max-width:980px; margin:28px auto 0; padding:0 28px; display:flex; flex-direction:column; gap:10px; }
 
-  /* ── MAIN GRID ── */
-  main {
-    max-width: 960px;
-    margin: 28px auto 0;
-    padding: 0 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  /* SUMMARY */
+  .summary-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:10px; }
+  .card { background:var(--bg3); border-radius:var(--card-r); padding:20px; }
+  .card-label { font-size:0.68rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+  .card-amount { font-size:1.8rem; font-weight:700; letter-spacing:-0.04em; line-height:1; }
+  .card.bal .card-amount { color:var(--text); }
+  .card.inc .card-amount { color:var(--green); }
+  .card.exp .card-amount { color:var(--red); }
+  .card-sub { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+  .sub-tag { font-size:0.64rem; font-weight:600; padding:3px 8px; border-radius:6px; }
+  .sub-tag.a { background:rgba(10,132,255,0.15); color:var(--blue); }
+  .sub-tag.l { background:rgba(255,55,95,0.12); color:#ff375f; }
 
-  /* ── SUMMARY ROW ── */
-  .summary-row {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: 10px;
-  }
-  .card {
-    background: var(--bg3);
-    border-radius: var(--card-r);
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 8px;
-  }
-  .card-amount {
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-  .card.bal  .card-amount { color: var(--text); }
-  .card.inc  .card-amount { color: var(--green); }
-  .card.exp  .card-amount { color: var(--red); }
-  .card-sub {
-    margin-top: 10px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .sub-tag {
-    font-size: 0.65rem;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.02em;
-  }
-  .sub-tag.a { background: rgba(10,132,255,0.15); color: var(--blue); }
-  .sub-tag.l { background: rgba(255,55,95,0.12);  color: #ff375f; }
+  /* FORM */
+  .form-card { background:var(--bg3); border-radius:var(--card-r); padding:20px; }
+  .form-label { font-size:0.68rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text3); margin-bottom:14px; }
+  .form-grid { display:grid; grid-template-columns:auto 120px 1fr 160px auto 44px; gap:8px; align-items:center; }
 
-  /* ── FORM CARD ── */
-  .form-card {
-    background: var(--bg3);
-    border-radius: var(--card-r);
-    padding: 20px;
-  }
-  .form-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 14px;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: auto 120px 1fr 160px auto 44px;
-    gap: 8px;
-    align-items: center;
-  }
+  .seg { display:flex; background:var(--bg4); border-radius:10px; padding:2px; height:var(--btn-h); gap:2px; }
+  .seg-btn { flex:1; border:none; border-radius:8px; background:transparent; color:var(--text2); font-family:inherit; font-size:0.78rem; font-weight:500; cursor:pointer; transition:background .18s,color .18s; white-space:nowrap; padding:0 10px; }
+  .seg-btn.on-inc { background:var(--green); color:#000; font-weight:600; }
+  .seg-btn.on-exp { background:var(--red);   color:#fff; font-weight:600; }
+  .seg-btn.on-a   { background:var(--blue);  color:#fff; font-weight:600; }
+  .seg-btn.on-l   { background:#ff375f;      color:#fff; font-weight:600; }
 
-  /* Segmented controls */
-  .seg {
-    display: flex;
-    background: var(--bg4);
-    border-radius: 10px;
-    padding: 2px;
-    height: var(--btn-h);
-    gap: 2px;
-  }
-  .seg-btn {
-    flex: 1;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--text2);
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.18s, color 0.18s;
-    white-space: nowrap;
-    padding: 0 10px;
-  }
-  .seg-btn.on-inc { background: var(--green); color: #000; font-weight: 600; }
-  .seg-btn.on-exp { background: var(--red);   color: #fff; font-weight: 600; }
-  .seg-btn.on-a   { background: var(--blue);  color: #fff; font-weight: 600; }
-  .seg-btn.on-l   { background: #ff375f;      color: #fff; font-weight: 600; }
-
-  /* Inputs */
   input, select {
-    background: var(--bg4);
-    border: none;
-    border-radius: 10px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 400;
-    height: var(--btn-h);
-    padding: 0 14px;
-    outline: none;
-    width: 100%;
-    transition: box-shadow 0.18s;
-    -webkit-appearance: none;
+    background:var(--bg4); border:none; border-radius:10px; color:var(--text);
+    font-family:inherit; font-size:0.9rem; height:var(--btn-h); padding:0 14px;
+    outline:none; width:100%; transition:box-shadow .18s; -webkit-appearance:none;
   }
-  input::placeholder { color: var(--text3); }
-  input:focus { box-shadow: 0 0 0 2px rgba(10,132,255,0.5); }
-  select:focus { box-shadow: 0 0 0 2px rgba(10,132,255,0.5); }
-  select option { background: #1c1c1e; }
+  input::placeholder { color:var(--text3); }
+  input:focus, select:focus { box-shadow:0 0 0 2px rgba(10,132,255,0.5); }
+  select option { background:#1c1c1e; }
 
-  /* Add button */
-  .add-btn {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    border: none;
-    background: var(--blue);
-    color: #fff;
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.15s, transform 0.1s;
-    flex-shrink: 0;
-    font-weight: 300;
-  }
-  .add-btn:hover  { opacity: 0.85; transform: scale(1.04); }
-  .add-btn:active { transform: scale(0.96); }
-  .add-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  /* date input styling */
+  input[type="date"] { color-scheme:dark; cursor:pointer; }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter:invert(0.6); cursor:pointer; }
 
-  /* ── BOTTOM ROW ── */
-  .bottom-row {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 10px;
-  }
+  .add-btn { width:44px; height:44px; border-radius:12px; border:none; background:var(--blue); color:#fff; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:opacity .15s,transform .1s; flex-shrink:0; }
+  .add-btn:hover  { opacity:.85; transform:scale(1.04); }
+  .add-btn:active { transform:scale(.96); }
+  .add-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
 
-  /* Transactions */
-  .tx-card {
-    background: var(--bg3);
-    border-radius: var(--card-r);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  .tx-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .month-nav-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .nav-arrow {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    border: none;
-    background: var(--bg4);
-    color: var(--text2);
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
-    flex-shrink: 0;
-  }
-  .nav-arrow:hover { background: var(--sep); color: var(--text); }
-  .month-name {
-    flex: 1;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text);
-    text-align: center;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
-  .all-months-btn {
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 8px;
-    border: none;
-    background: var(--bg4);
-    color: var(--text3);
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, color 0.15s;
-    letter-spacing: 0.02em;
-  }
-  .all-months-btn.on { background: rgba(10,132,255,0.2); color: var(--blue); }
+  /* BOTTOM */
+  .bottom-row { display:grid; grid-template-columns:1fr 280px; gap:10px; }
+  .tx-card { background:var(--bg3); border-radius:var(--card-r); padding:20px; display:flex; flex-direction:column; }
 
-  /* Filter chips */
-  .chips {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .chip {
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 8px;
-    border: none;
-    background: var(--bg4);
-    color: var(--text3);
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, color 0.15s;
-    letter-spacing: 0.02em;
-  }
-  .chip.on       { background: rgba(255,255,255,0.12); color: var(--text); }
-  .chip.on-a     { background: rgba(10,132,255,0.18); color: var(--blue); }
-  .chip.on-l     { background: rgba(255,55,95,0.15);  color: #ff375f; }
-  .chip.on-inc   { background: rgba(48,209,88,0.15);  color: var(--green); }
-  .chip.on-exp   { background: rgba(255,69,58,0.15);  color: var(--red); }
+  /* PERIOD */
+  .period-row { display:flex; gap:6px; margin-bottom:10px; }
+  .period-btn { flex:1; height:32px; border:none; border-radius:8px; background:var(--bg4); color:var(--text3); font-family:inherit; font-size:0.72rem; font-weight:600; cursor:pointer; transition:background .15s,color .15s; letter-spacing:0.02em; }
+  .period-btn.on { background:rgba(10,132,255,0.2); color:var(--blue); }
 
-  /* TX list */
-  .tx-list {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    max-height: 360px;
-  }
-  .tx-list::-webkit-scrollbar { width: 3px; }
-  .tx-list::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+  /* DATE PICKERS */
+  .date-picker-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .date-picker-row input[type="date"] { height:32px; font-size:0.75rem; padding:0 10px; border-radius:8px; flex:1; }
+  .date-sep { font-size:0.75rem; color:var(--text3); flex-shrink:0; }
 
-  .tx-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--sep2);
-  }
-  .tx-row:last-child { border-bottom: none; }
-  .tx-row:hover .del-btn { opacity: 1; }
-  .tx-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .tx-body { flex: 1; min-width: 0; }
-  .tx-name {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .tx-meta {
-    font-size: 0.68rem;
-    color: var(--text3);
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .who-tag {
-    font-size: 0.62rem;
-    font-weight: 700;
-    padding: 1px 5px;
-    border-radius: 5px;
-    letter-spacing: 0.03em;
-  }
-  .who-tag.a { background: rgba(10,132,255,0.2); color: var(--blue); }
-  .who-tag.l { background: rgba(255,55,95,0.18); color: #ff375f; }
-  .tx-amt {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    flex-shrink: 0;
-  }
-  .tx-amt.i { color: var(--green); }
-  .tx-amt.e { color: var(--red); }
-  .del-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--text3); font-size: 0.8rem;
-    opacity: 0; transition: opacity 0.15s, color 0.15s;
-    padding: 0 2px; flex-shrink: 0; line-height: 1;
-  }
-  .del-btn:hover { color: var(--red); }
-  .empty { text-align: center; color: var(--text3); font-size: 0.83rem; padding: 40px 0; }
+  /* MONTH NAV */
+  .month-nav-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .nav-arrow { width:28px; height:28px; border-radius:8px; border:none; background:var(--bg4); color:var(--text2); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+  .nav-arrow:hover { color:var(--text); }
+  .month-name { flex:1; font-size:0.78rem; font-weight:600; color:var(--text); text-align:center; letter-spacing:0.03em; text-transform:uppercase; }
 
-  /* ── RIGHT PANEL ── */
-  .right-col { display: flex; flex-direction: column; gap: 10px; }
+  /* FILTERS */
+  .filter-section { margin-bottom:10px; }
+  .filter-group-label { font-size:0.62rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text3); margin-bottom:6px; }
+  .chips { display:flex; gap:5px; flex-wrap:wrap; }
+  .chip { font-size:0.72rem; font-weight:600; padding:5px 12px; border-radius:8px; border:none; background:var(--bg4); color:var(--text3); cursor:pointer; font-family:inherit; transition:background .15s,color .15s; }
+  .chip.on     { background:rgba(255,255,255,0.12); color:var(--text); }
+  .chip.on-a   { background:rgba(10,132,255,0.18); color:var(--blue); }
+  .chip.on-l   { background:rgba(255,55,95,0.15);  color:#ff375f; }
+  .chip.on-inc { background:rgba(48,209,88,0.15);  color:var(--green); }
+  .chip.on-exp { background:rgba(255,69,58,0.15);  color:var(--red); }
 
-  .side-card {
-    background: var(--bg3);
-    border-radius: var(--card-r);
-    padding: 18px;
-  }
-  .side-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 14px;
-  }
+  .active-filter-bar { display:flex; align-items:center; gap:6px; margin-bottom:10px; flex-wrap:wrap; min-height:0; }
+  .af-tag { font-size:0.7rem; font-weight:600; padding:4px 10px; border-radius:8px; }
+  .af-tag.a   { background:rgba(10,132,255,0.2); color:var(--blue); }
+  .af-tag.l   { background:rgba(255,55,95,0.18); color:#ff375f; }
+  .af-tag.inc { background:rgba(48,209,88,0.18); color:var(--green); }
+  .af-tag.exp { background:rgba(255,69,58,0.18); color:var(--red); }
 
-  /* Person rows */
-  .p-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--sep2);
-  }
-  .p-row:last-child { border-bottom: none; }
-  .p-name { font-size: 0.875rem; font-weight: 600; }
-  .p-name.a { color: var(--blue); }
-  .p-name.l { color: #ff375f; }
-  .p-right { text-align: right; }
-  .p-exp { font-size: 0.95rem; font-weight: 700; color: var(--red); letter-spacing: -0.02em; }
-  .p-inc { font-size: 0.68rem; color: var(--green); margin-top: 2px; }
+  /* TX LIST */
+  .tx-list { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:1px; max-height:300px; }
+  .tx-list::-webkit-scrollbar { width:3px; }
+  .tx-list::-webkit-scrollbar-thumb { background:var(--bg4); border-radius:3px; }
+  .tx-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--sep2); }
+  .tx-row:last-child { border-bottom:none; }
+  .tx-row:hover .del-btn { opacity:1; }
+  .tx-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .tx-body { flex:1; min-width:0; }
+  .tx-name { font-size:0.875rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tx-meta { font-size:0.67rem; color:var(--text3); margin-top:2px; display:flex; align-items:center; gap:5px; }
+  .who-tag { font-size:0.62rem; font-weight:700; padding:1px 5px; border-radius:5px; }
+  .who-tag.a { background:rgba(10,132,255,0.2); color:var(--blue); }
+  .who-tag.l { background:rgba(255,55,95,0.18); color:#ff375f; }
+  .tx-amt { font-size:0.875rem; font-weight:600; letter-spacing:-0.02em; flex-shrink:0; }
+  .tx-amt.i { color:var(--green); }
+  .tx-amt.e { color:var(--red); }
+  .del-btn { background:none; border:none; cursor:pointer; color:var(--text3); font-size:0.8rem; opacity:0; transition:opacity .15s,color .15s; padding:0 2px; flex-shrink:0; }
+  .del-btn:hover { color:var(--red); }
+  .empty { text-align:center; color:var(--text3); font-size:0.83rem; padding:36px 0; }
 
-  /* Category bars */
-  .cat-rows { display: flex; flex-direction: column; gap: 10px; }
-  .cat-r { display: flex; flex-direction: column; gap: 4px; }
-  .cat-top { display: flex; justify-content: space-between; }
-  .cat-n { font-size: 0.75rem; color: var(--text2); }
-  .cat-v { font-size: 0.68rem; font-weight: 600; color: var(--text3); }
-  .bar-bg { height: 4px; background: var(--bg4); border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  /* RIGHT */
+  .right-col { display:flex; flex-direction:column; gap:10px; }
+  .side-card { background:var(--bg3); border-radius:var(--card-r); padding:18px; }
+  .side-title { font-size:0.68rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text3); margin-bottom:14px; }
+  .p-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--sep2); }
+  .p-row:last-child { border-bottom:none; }
+  .p-name { font-size:0.875rem; font-weight:600; }
+  .p-name.a { color:var(--blue); }
+  .p-name.l { color:#ff375f; }
+  .p-right { text-align:right; }
+  .p-exp { font-size:0.95rem; font-weight:700; color:var(--red); letter-spacing:-0.02em; }
+  .p-inc { font-size:0.68rem; color:var(--green); margin-top:2px; }
+  .cat-rows { display:flex; flex-direction:column; gap:10px; }
+  .cat-r { display:flex; flex-direction:column; gap:4px; }
+  .cat-top { display:flex; justify-content:space-between; }
+  .cat-n { font-size:0.75rem; color:var(--text2); }
+  .cat-v { font-size:0.68rem; font-weight:600; color:var(--text3); }
+  .bar-bg { height:4px; background:var(--bg4); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; transition:width .5s; }
 
-  /* ── MODAL ── */
-  .overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 200;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .overlay.show { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--bg3);
-    border-radius: 22px;
-    padding: 28px 24px;
-    max-width: 320px;
-    width: 90%;
-    text-align: center;
-    transform: scale(0.94);
-    transition: transform 0.25s cubic-bezier(.2,1.2,.4,1);
-    border: 1px solid var(--sep);
-  }
-  .overlay.show .modal { transform: scale(1); }
-  .m-icon { font-size: 2rem; margin-bottom: 12px; }
-  .m-title { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
-  .m-desc { font-size: 0.82rem; color: var(--text2); margin-bottom: 22px; line-height: 1.5; }
-  .m-desc strong { color: var(--text); }
-  .m-btns { display: flex; gap: 8px; }
-  .m-cancel {
-    flex: 1; height: 44px; border-radius: 12px;
-    border: none; background: var(--bg4);
-    color: var(--text2); font-family: inherit;
-    font-size: 0.88rem; font-weight: 500; cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .m-cancel:hover { background: var(--sep); color: var(--text); }
-  .m-confirm {
-    flex: 1; height: 44px; border-radius: 12px;
-    border: none; background: var(--red);
-    color: #fff; font-family: inherit;
-    font-size: 0.88rem; font-weight: 600; cursor: pointer;
-    transition: opacity 0.15s;
-  }
-  .m-confirm:hover { opacity: 0.85; }
+  /* MODAL */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); display:flex; align-items:center; justify-content:center; z-index:200; opacity:0; pointer-events:none; transition:opacity .2s; }
+  .overlay.show { opacity:1; pointer-events:all; }
+  .modal { background:var(--bg3); border-radius:22px; padding:28px 24px; max-width:320px; width:90%; text-align:center; transform:scale(.94); transition:transform .25s cubic-bezier(.2,1.2,.4,1); border:1px solid var(--sep); }
+  .overlay.show .modal { transform:scale(1); }
+  .m-icon { font-size:2rem; margin-bottom:12px; }
+  .m-title { font-size:1rem; font-weight:700; letter-spacing:-0.02em; margin-bottom:6px; }
+  .m-desc { font-size:0.82rem; color:var(--text2); margin-bottom:22px; line-height:1.5; }
+  .m-desc strong { color:var(--text); }
+  .m-btns { display:flex; gap:8px; }
+  .m-cancel { flex:1; height:44px; border-radius:12px; border:none; background:var(--bg4); color:var(--text2); font-family:inherit; font-size:0.88rem; cursor:pointer; }
+  .m-cancel:hover { color:var(--text); }
+  .m-confirm { flex:1; height:44px; border-radius:12px; border:none; background:var(--red); color:#fff; font-family:inherit; font-size:0.88rem; font-weight:600; cursor:pointer; }
+  .m-confirm:hover { opacity:.85; }
 
-  @media (max-width: 720px) {
-    header { padding: 36px 18px 0; }
-    main { padding: 0 18px; }
-    .summary-row { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .form-grid .seg:first-child { grid-column: 1 / -1; }
-    .form-grid .add-btn { grid-column: 1 / -1; width: 100%; border-radius: 12px; }
-    .bottom-row { grid-template-columns: 1fr; }
+  @media (max-width:720px) {
+    header { padding:36px 18px 0; }
+    main { padding:0 18px; }
+    .summary-row { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr 1fr; gap:8px; }
+    .form-grid .seg { grid-column:1/-1; }
+    .form-grid .add-btn { grid-column:1/-1; width:100%; border-radius:12px; }
+    .bottom-row { grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -501,11 +196,14 @@
 <header>
   <div class="logo-area">
     <h1>Фінанси</h1>
-    <p id="monthLabel"></p>
+    <p id="todayLabel"></p>
   </div>
-  <div class="sync-pill">
-    <div class="sync-dot" id="syncDot"></div>
-    <span id="syncText">підключення</span>
+  <div class="hdr-right">
+    <a class="charts-btn" href="charts.html">📊 Графіки</a>
+    <div class="sync-pill">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncText">підключення</span>
+    </div>
   </div>
 </header>
 
@@ -539,15 +237,15 @@
     <div class="form-label">Нова транзакція</div>
     <div class="form-grid">
       <div class="seg" style="min-width:110px">
-        <button class="seg-btn on-inc" id="tInc" onclick="setType('income')">+ Дохід</button>
-        <button class="seg-btn" id="tExp" onclick="setType('expense')">− Витрата</button>
+        <button class="seg-btn on-inc" id="tInc" onclick="setFormType('income')">+ Дохід</button>
+        <button class="seg-btn" id="tExp" onclick="setFormType('expense')">− Витрата</button>
       </div>
       <input type="number" id="amtInput" placeholder="CA$" min="0" step="0.01">
-      <input type="text" id="descInput" placeholder="Опис…">
-      <select id="catSel"></select>
+      <input type="text" id="descInput" placeholder="Опис (необов'язково для доходу)">
+      <select id="catSel" onchange="onCatChange()"></select>
       <div class="seg" style="min-width:110px">
-        <button class="seg-btn on-a" id="pArs" onclick="setPerson('Арсен')">Арсен</button>
-        <button class="seg-btn" id="pLyd" onclick="setPerson('Люда')">Люда</button>
+        <button class="seg-btn on-a" id="pArs" onclick="setFormPerson('Арсен')">Арсен</button>
+        <button class="seg-btn" id="pLyd" onclick="setFormPerson('Люда')">Люда</button>
       </div>
       <button class="add-btn" id="addBtn" onclick="addTx()">+</button>
     </div>
@@ -555,29 +253,62 @@
 
   <!-- BOTTOM -->
   <div class="bottom-row">
-    <!-- Transactions -->
     <div class="tx-card">
-      <div class="tx-controls">
-        <div class="month-nav-row">
-          <button class="nav-arrow" onclick="changeMonth(-1)">‹</button>
-          <div class="month-name" id="mnLabel">—</div>
-          <button class="nav-arrow" onclick="changeMonth(1)">›</button>
-          <button class="all-months-btn on" id="allBtn" onclick="toggleAll()">Всі</button>
-        </div>
+      <div class="side-title" style="margin-bottom:12px">Транзакції</div>
+
+      <!-- PERIOD BUTTONS -->
+      <div class="period-row">
+        <button class="period-btn"    onclick="setPeriod('day')"   id="pd-day">День</button>
+        <button class="period-btn"    onclick="setPeriod('week')"  id="pd-week">Тиждень</button>
+        <button class="period-btn on" onclick="setPeriod('month')" id="pd-month">Місяць</button>
+        <button class="period-btn"    onclick="setPeriod('all')"   id="pd-all">Весь час</button>
+      </div>
+
+      <!-- DAY PICKER -->
+      <div class="date-picker-row" id="dayPickerRow" style="display:none">
+        <input type="date" id="dayPicker" onchange="render()">
+      </div>
+
+      <!-- WEEK PICKER -->
+      <div class="date-picker-row" id="weekPickerRow" style="display:none">
+        <input type="date" id="weekStart" onchange="onWeekChange()">
+        <span class="date-sep">→</span>
+        <input type="date" id="weekEnd" readonly style="opacity:.5">
+      </div>
+
+      <!-- MONTH NAV -->
+      <div class="month-nav-row" id="mnRow">
+        <button class="nav-arrow" onclick="changeMonth(-1)">‹</button>
+        <div class="month-name" id="mnLabel">—</div>
+        <button class="nav-arrow" onclick="changeMonth(1)">›</button>
+      </div>
+
+      <!-- PERSON FILTER -->
+      <div class="filter-section">
+        <div class="filter-group-label">Хто</div>
         <div class="chips">
-          <button class="chip on" onclick="setFilter('all')" id="f-all">Всі</button>
-          <button class="chip" onclick="setFilter('Арсен')" id="f-Арсен">Арсен</button>
-          <button class="chip" onclick="setFilter('Люда')" id="f-Люда">Люда</button>
-          <button class="chip" onclick="setFilter('income')" id="f-income">Доходи</button>
-          <button class="chip" onclick="setFilter('expense')" id="f-expense">Витрати</button>
+          <button class="chip on" onclick="setPersonFilter('all')"   id="fp-all">Всі</button>
+          <button class="chip"    onclick="setPersonFilter('Арсен')" id="fp-Арсен">Арсен</button>
+          <button class="chip"    onclick="setPersonFilter('Люда')"  id="fp-Люда">Люда</button>
         </div>
       </div>
-      <div class="tx-list" id="txList">
-        <div class="empty">Завантаження…</div>
+
+      <!-- TYPE FILTER -->
+      <div class="filter-section" style="margin-bottom:12px">
+        <div class="filter-group-label">Тип</div>
+        <div class="chips">
+          <button class="chip on"  onclick="setTypeFilter('all')"     id="ft-all">Всі</button>
+          <button class="chip"     onclick="setTypeFilter('income')"  id="ft-income">Доходи</button>
+          <button class="chip"     onclick="setTypeFilter('expense')" id="ft-expense">Витрати</button>
+        </div>
       </div>
+
+      <!-- ACTIVE TAGS -->
+      <div class="active-filter-bar" id="filterBar"></div>
+
+      <div class="tx-list" id="txList"><div class="empty">Завантаження…</div></div>
     </div>
 
-    <!-- Right col -->
     <div class="right-col">
       <div class="side-card">
         <div class="side-title">Хто скільки</div>
@@ -598,9 +329,7 @@
       </div>
       <div class="side-card">
         <div class="side-title">Категорії</div>
-        <div class="cat-rows" id="catRows">
-          <div style="color:var(--text3);font-size:.75rem;">Завантаження…</div>
-        </div>
+        <div class="cat-rows" id="catRows"><div style="color:var(--text3);font-size:.75rem;">Завантаження…</div></div>
       </div>
     </div>
   </div>
@@ -610,229 +339,237 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
 firebase.initializeApp({
-  apiKey: "AIzaSyALEqyLR0LOSK7V1Gnq8BVUtUBU3k6fHTY",
-  authDomain: "spendings-3b6bb.firebaseapp.com",
-  databaseURL: "https://spendings-3b6bb-default-rtdb.firebaseio.com",
-  projectId: "spendings-3b6bb",
-  storageBucket: "spendings-3b6bb.firebasestorage.app",
-  messagingSenderId: "813486817421",
-  appId: "1:813486817421:web:34524e0ee566c7866ca2c4"
+  apiKey:"AIzaSyALEqyLR0LOSK7V1Gnq8BVUtUBU3k6fHTY",
+  authDomain:"spendings-3b6bb.firebaseapp.com",
+  databaseURL:"https://spendings-3b6bb-default-rtdb.firebaseio.com",
+  projectId:"spendings-3b6bb",
+  storageBucket:"spendings-3b6bb.firebasestorage.app",
+  messagingSenderId:"813486817421",
+  appId:"1:813486817421:web:34524e0ee566c7866ca2c4"
 });
-const db = firebase.database();
-const txRef = db.ref('transactions');
+var db = firebase.database();
+var txRef = db.ref('transactions');
 
-const CATS_INC = ['Зарплата','Фріланс','Інвестиції','Подарунок','Інше'];
-const CATS_EXP = ['Groceries','Ресторани','Транспорт','Житло & Utilities','Одяг','Здоров\'я','Розваги','Освіта','Технології','Спорт','Інше'];
-const CAT_C = {
+var CATS_INC = ['Зарплата','Фріланс','Інвестиції','Подарунок','Інше'];
+var CATS_EXP = ['Groceries','Ресторани','Транспорт','Житло & Utilities','Одяг','Здоров\'я','Розваги','Освіта','Технології','Спорт','Інше'];
+var CAT_C = {
   'Groceries':'#30d158','Ресторани':'#ff375f','Транспорт':'#0a84ff','Житло & Utilities':'#bf5af2',
   'Одяг':'#ff9f0a','Здоров\'я':'#5ac8fa','Розваги':'#ff6b35','Освіта':'#ffd60a',
   'Технології':'#6e6e73','Спорт':'#30d158','Інше':'#48484a',
-  'Зарплата':'#30d158','Фріланс':'#30d158','Інвестиції':'#30d158','Подарунок':'#30d158'
+  'Зарплата':'#30d158','Фріланс':'#34c759','Інвестиції':'#5ac8fa','Подарунок':'#ff9f0a'
 };
 
-let txs = [], type = 'income', person = 'Арсен', filter = 'all';
-let pendingKey = null;
-const now = new Date();
-let vY = now.getFullYear(), vM = now.getMonth(), showAll = true;
+var txs = [];
+var formType = 'income', formPerson = 'Арсен';
+var personFilter = 'all', typeFilter = 'all';
+var period = 'month';
+var pendingKey = null;
+var now = new Date();
+var vY = now.getFullYear(), vM = now.getMonth();
 
-function setSS(s, t) {
-  document.getElementById('syncDot').className = 'sync-dot ' + s;
-  document.getElementById('syncText').textContent = t;
+// helper: date string "YYYY-MM-DD"
+function toDateStr(d) {
+  var y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
 }
+function startOfDay(dateStr) {
+  var d=new Date(dateStr+'T00:00:00'); return d.getTime();
+}
+function endOfDay(dateStr) {
+  var d=new Date(dateStr+'T23:59:59'); return d.getTime();
+}
+
+// init pickers with today
+document.getElementById('dayPicker').value = toDateStr(now);
+document.getElementById('weekStart').value = toDateStr(now);
+document.getElementById('weekEnd').value   = toDateStr(new Date(now.getTime()+6*864e5));
+
+function onWeekChange() {
+  var ws = document.getElementById('weekStart').value;
+  if (!ws) return;
+  var end = new Date(new Date(ws+'T00:00:00').getTime()+6*864e5);
+  document.getElementById('weekEnd').value = toDateStr(end);
+  render();
+}
+
+function setSS(s,t){ document.getElementById('syncDot').className='sync-dot '+s; document.getElementById('syncText').textContent=t; }
 
 txRef.on('value', function(snap) {
-  txs = [];
-  if (snap.exists()) {
-    snap.forEach(function(c) {
-      var v = c.val();
-      txs.push({
-        key: c.key,
-        type: v.type || 'expense',
-        amount: Number(v.amount) || 0,
-        description: v.description || '',
-        category: v.category || 'Інше',
-        person: v.person || 'Арсен',
-        date: v.date || '',
-        ts: Number(v.ts) || 0
-      });
-    });
-  }
-  txs.sort(function(a,b){ return b.ts - a.ts; });
-  setSS('online', 'синхронізовано · ' + txs.length);
+  txs=[];
+  if(snap.exists()) snap.forEach(function(c){ var v=c.val(); txs.push({key:c.key,type:v.type||'expense',amount:Number(v.amount)||0,description:v.description||'',category:v.category||'Інше',person:v.person||'Арсен',date:v.date||'',ts:Number(v.ts)||0}); });
+  txs.sort(function(a,b){ return b.ts-a.ts; });
+  setSS('online','синхронізовано · '+txs.length);
   render();
-}, function(e) { setSS('error', 'помилка'); });
+}, function(){ setSS('error','помилка'); });
 
-function inMonth(t) {
-  if (showAll) return true;
+// ── Period filter ──
+function inPeriod(t) {
   if (!t.ts) return true;
-  var d = new Date(t.ts);
-  return d.getFullYear() === vY && d.getMonth() === vM;
+  var ts=t.ts;
+  if (period==='all') return true;
+  if (period==='day') {
+    var dp=document.getElementById('dayPicker').value;
+    if (!dp) return true;
+    return ts>=startOfDay(dp) && ts<=endOfDay(dp);
+  }
+  if (period==='week') {
+    var ws=document.getElementById('weekStart').value;
+    var we=document.getElementById('weekEnd').value;
+    if (!ws||!we) return true;
+    return ts>=startOfDay(ws) && ts<=endOfDay(we);
+  }
+  if (period==='month') {
+    var d=new Date(ts);
+    return d.getFullYear()===vY && d.getMonth()===vM;
+  }
+  return true;
 }
 
-function mnName(y, m) {
-  return new Date(y, m, 1).toLocaleDateString('uk-UA', {month:'long', year:'numeric'}).toUpperCase();
-}
-function updateMnNav() {
-  document.getElementById('mnLabel').textContent = showAll ? 'УСІ МІСЯЦІ' : mnName(vY, vM);
-  document.getElementById('allBtn').className = 'all-months-btn' + (showAll ? ' on' : '');
+function setPeriod(p) {
+  period=p;
+  ['day','week','month','all'].forEach(function(x){ document.getElementById('pd-'+x).className='period-btn'+(x===p?' on':''); });
+  document.getElementById('dayPickerRow').style.display  = p==='day'   ? 'flex' : 'none';
+  document.getElementById('weekPickerRow').style.display = p==='week'  ? 'flex' : 'none';
+  document.getElementById('mnRow').style.display         = p==='month' ? 'flex' : 'none';
+  render();
 }
 
-function changeMonth(d) {
-  showAll = false; vM += d;
-  if (vM < 0)  { vM = 11; vY--; }
-  if (vM > 11) { vM = 0;  vY++; }
-  updateMnNav(); render();
+function changeMonth(d){ vM+=d; if(vM<0){vM=11;vY--;} if(vM>11){vM=0;vY++;} updateMnLabel(); render(); }
+function updateMnLabel(){ document.getElementById('mnLabel').textContent=new Date(vY,vM,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'}).toUpperCase(); }
+
+// ── Filters ──
+function setPersonFilter(p) {
+  personFilter=p;
+  ['all','Арсен','Люда'].forEach(function(x){
+    var el=document.getElementById('fp-'+x); if(!el)return;
+    el.className='chip'+(x===p?(p==='Арсен'?' on-a':p==='Люда'?' on-l':' on'):'');
+  });
+  updateFilterBar(); renderList();
 }
-function toggleAll() { showAll = !showAll; updateMnNav(); render(); }
+function setTypeFilter(t) {
+  typeFilter=t;
+  ['all','income','expense'].forEach(function(x){
+    var el=document.getElementById('ft-'+x); if(!el)return;
+    el.className='chip'+(x===t?(t==='income'?' on-inc':t==='expense'?' on-exp':' on'):'');
+  });
+  updateFilterBar(); renderList();
+}
+function updateFilterBar() {
+  var tags=[];
+  if(personFilter!=='all') tags.push('<span class="af-tag '+(personFilter==='Арсен'?'a':'l')+'">👤 '+personFilter+'</span>');
+  if(typeFilter!=='all')   tags.push('<span class="af-tag '+(typeFilter==='income'?'inc':'exp')+'">'+(typeFilter==='income'?'↑ Доходи':'↓ Витрати')+'</span>');
+  document.getElementById('filterBar').innerHTML=tags.join('');
+}
+
+// ── Form ──
+function setFormType(t) {
+  formType=t;
+  document.getElementById('tInc').className='seg-btn'+(t==='income'?' on-inc':'');
+  document.getElementById('tExp').className='seg-btn'+(t==='expense'?' on-exp':'');
+  populateCats();
+  // update placeholder
+  document.getElementById('descInput').placeholder = t==='income' ? "Опис (необов'язково — авто з категорії)" : 'Опис…';
+}
+function setFormPerson(p) {
+  formPerson=p;
+  document.getElementById('pArs').className='seg-btn'+(p==='Арсен'?' on-a':'');
+  document.getElementById('pLyd').className='seg-btn'+(p==='Люда'?' on-l':'');
+}
+function onCatChange() {
+  // for income: if desc is empty or was auto-filled, update it with category
+  if (formType==='income') {
+    var desc=document.getElementById('descInput').value.trim();
+    var cat=document.getElementById('catSel').value;
+    // auto-fill only if empty
+    if (!desc) document.getElementById('descInput').value='';
+  }
+}
+function populateCats() {
+  var cats=formType==='income'?CATS_INC:CATS_EXP;
+  document.getElementById('catSel').innerHTML=cats.map(function(c){ return '<option>'+c+'</option>'; }).join('');
+}
 
 function addTx() {
-  var amt = parseFloat(document.getElementById('amtInput').value);
-  var desc = document.getElementById('descInput').value.trim();
-  var cat = document.getElementById('catSel').value;
-  if (!amt || amt <= 0) { pulse('amtInput'); return; }
-  if (!desc) { pulse('descInput'); return; }
-  var btn = document.getElementById('addBtn');
-  btn.disabled = true; btn.textContent = '…';
-  setSS('syncing', 'збереження…');
+  var amt=parseFloat(document.getElementById('amtInput').value);
+  var cat=document.getElementById('catSel').value;
+  var rawDesc=document.getElementById('descInput').value.trim();
+  // for income: if no desc, use category name
+  var desc = rawDesc || (formType==='income' ? cat : '');
+  if (!amt||amt<=0){ pulse('amtInput'); return; }
+  if (!desc){ pulse('descInput'); return; }
+
+  var btn=document.getElementById('addBtn');
+  btn.disabled=true; btn.textContent='…';
+  setSS('syncing','збереження…');
   txRef.push({
-    type: type, amount: amt, description: desc, category: cat, person: person,
-    date: new Date().toLocaleDateString('uk-UA', {day:'2-digit', month:'short'}),
-    ts: Date.now()
-  }).then(function() {
-    document.getElementById('amtInput').value = '';
-    document.getElementById('descInput').value = '';
-  }).catch(function(e) {
-    setSS('error', 'помилка збереження');
-  }).finally(function() {
-    btn.disabled = false; btn.textContent = '+';
-  });
+    type:formType, amount:amt, description:desc, category:cat, person:formPerson,
+    date:new Date().toLocaleDateString('uk-UA',{day:'2-digit',month:'short'}),
+    ts:Date.now()
+  }).then(function(){
+    document.getElementById('amtInput').value='';
+    document.getElementById('descInput').value='';
+  }).catch(function(){ setSS('error','помилка збереження'); })
+  .finally(function(){ btn.disabled=false; btn.textContent='+'; });
 }
 
-function deleteTx(key, desc, amt) {
-  pendingKey = key;
-  document.getElementById('mDesc').innerHTML = 'Видалити <strong>' + esc(desc) + '</strong> (' + amt + ')?';
-  document.getElementById('overlay').classList.add('show');
-}
-function closeModal() {
-  pendingKey = null;
-  document.getElementById('overlay').classList.remove('show');
-}
-function confirmDelete() {
-  if (!pendingKey) return;
-  var k = pendingKey; closeModal();
-  setSS('syncing', 'видалення…');
-  db.ref('transactions/' + k).remove().catch(function() { setSS('error', 'помилка'); });
-}
-document.getElementById('overlay').addEventListener('click', function(e) {
-  if (e.target === e.currentTarget) closeModal();
-});
+function deleteTx(key,desc,amt){ pendingKey=key; document.getElementById('mDesc').innerHTML='Видалити <strong>'+esc(desc)+'</strong> ('+amt+')?'; document.getElementById('overlay').classList.add('show'); }
+function closeModal(){ pendingKey=null; document.getElementById('overlay').classList.remove('show'); }
+function confirmDelete(){ if(!pendingKey)return; var k=pendingKey; closeModal(); setSS('syncing','видалення…'); db.ref('transactions/'+k).remove().catch(function(){ setSS('error','помилка'); }); }
+document.getElementById('overlay').addEventListener('click',function(e){ if(e.target===e.currentTarget)closeModal(); });
 
-function setType(t) {
-  type = t;
-  document.getElementById('tInc').className = 'seg-btn' + (t==='income'  ? ' on-inc' : '');
-  document.getElementById('tExp').className = 'seg-btn' + (t==='expense' ? ' on-exp' : '');
-  populateCats();
-}
-function setPerson(p) {
-  person = p;
-  document.getElementById('pArs').className = 'seg-btn' + (p==='Арсен' ? ' on-a' : '');
-  document.getElementById('pLyd').className = 'seg-btn' + (p==='Люда'  ? ' on-l' : '');
-}
-function setFilter(f) {
-  filter = f;
-  document.querySelectorAll('.chip').forEach(function(c) {
-    c.className = 'chip';
-  });
-  var el = document.getElementById('f-' + f);
-  if (el) {
-    if (f==='all') el.className = 'chip on';
-    else if (f==='Арсен') el.className = 'chip on-a';
-    else if (f==='Люда') el.className = 'chip on-l';
-    else if (f==='income') el.className = 'chip on-inc';
-    else if (f==='expense') el.className = 'chip on-exp';
-  }
-  renderList();
-}
-
-function populateCats() {
-  var cats = type === 'income' ? CATS_INC : CATS_EXP;
-  document.getElementById('catSel').innerHTML = cats.map(function(c){ return '<option>' + c + '</option>'; }).join('');
-}
-function pulse(id) {
-  var el = document.getElementById(id);
-  el.style.boxShadow = '0 0 0 2px rgba(255,69,58,0.6)';
-  setTimeout(function(){ el.style.boxShadow = ''; }, 800);
-}
-function fmt(n) { return '$' + n.toLocaleString('en-CA', {minimumFractionDigits:0, maximumFractionDigits:2}); }
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function pulse(id){ var el=document.getElementById(id); el.style.boxShadow='0 0 0 2px rgba(255,69,58,0.6)'; setTimeout(function(){ el.style.boxShadow=''; },800); }
+function fmt(n){ return '$'+n.toLocaleString('en-CA',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderList() {
-  var vis = txs.filter(inMonth);
-  if (filter === 'Арсен')  vis = vis.filter(function(t){ return t.person==='Арсен'; });
-  else if (filter==='Люда')    vis = vis.filter(function(t){ return t.person==='Люда'; });
-  else if (filter==='income')  vis = vis.filter(function(t){ return t.type==='income'; });
-  else if (filter==='expense') vis = vis.filter(function(t){ return t.type==='expense'; });
-  var el = document.getElementById('txList');
-  if (!vis.length) { el.innerHTML = '<div class="empty">Транзакцій не знайдено</div>'; return; }
-  el.innerHTML = vis.map(function(t) {
-    var isA = t.person === 'Арсен';
-    return '<div class="tx-row">' +
-      '<div class="tx-dot" style="background:' + (CAT_C[t.category]||'#48484a') + '"></div>' +
-      '<div class="tx-body">' +
-        '<div class="tx-name">' + esc(t.description) + '</div>' +
-        '<div class="tx-meta">' +
-          '<span class="who-tag ' + (isA?'a':'l') + '">' + t.person + '</span>' +
-          esc(t.category) + ' · ' + t.date +
-        '</div>' +
-      '</div>' +
-      '<div class="tx-amt ' + (t.type==='income'?'i':'e') + '">' + (t.type==='income'?'+':'−') + fmt(t.amount) + '</div>' +
-      '<button class="del-btn" onclick="deleteTx(\'' + t.key + '\',\'' + esc(t.description) + '\',\'' + (t.type==='income'?'+':'-') + fmt(t.amount) + '\')">✕</button>' +
+  var vis=txs.filter(inPeriod);
+  if(personFilter!=='all') vis=vis.filter(function(t){ return t.person===personFilter; });
+  if(typeFilter!=='all')   vis=vis.filter(function(t){ return t.type===typeFilter; });
+  var el=document.getElementById('txList');
+  if(!vis.length){ el.innerHTML='<div class="empty">Транзакцій не знайдено</div>'; return; }
+  el.innerHTML=vis.map(function(t){
+    var isA=t.person==='Арсен';
+    return '<div class="tx-row">'+
+      '<div class="tx-dot" style="background:'+(CAT_C[t.category]||'#48484a')+'"></div>'+
+      '<div class="tx-body"><div class="tx-name">'+esc(t.description)+'</div>'+
+      '<div class="tx-meta"><span class="who-tag '+(isA?'a':'l')+'">'+t.person+'</span>'+esc(t.category)+' · '+t.date+'</div></div>'+
+      '<div class="tx-amt '+(t.type==='income'?'i':'e')+'">'+(t.type==='income'?'+':'−')+fmt(t.amount)+'</div>'+
+      '<button class="del-btn" onclick="deleteTx(\''+t.key+'\',\''+esc(t.description)+'\',\''+(t.type==='income'?'+':'-')+fmt(t.amount)+'\')">✕</button>'+
     '</div>';
   }).join('');
 }
 
 function render() {
-  var vis = txs.filter(inMonth);
-  function s(p, tp) {
-    return vis.filter(function(t){ return (!p||t.person===p) && t.type===tp; })
-              .reduce(function(a,t){ return a+t.amount; }, 0);
-  }
-  var ti=s(null,'income'), te=s(null,'expense');
-  document.getElementById('incAmt').textContent = fmt(ti);
-  document.getElementById('expAmt').textContent = fmt(te);
-  var b = ti - te;
-  var bel = document.getElementById('balAmt');
-  bel.textContent = (b<0?'-':'') + fmt(Math.abs(b));
-  bel.style.color = b>=0 ? '#ffffff' : 'var(--red)';
-  var ai=s('Арсен','income'), ae=s('Арсен','expense');
-  var li=s('Люда','income'),  le=s('Люда','expense');
-  document.getElementById('aIncTag').textContent = 'Арсен ' + fmt(ai);
-  document.getElementById('lIncTag').textContent = 'Люда '  + fmt(li);
-  document.getElementById('aExpTag').textContent = 'Арсен ' + fmt(ae);
-  document.getElementById('lExpTag').textContent = 'Люда '  + fmt(le);
-  document.getElementById('aExp').textContent = fmt(ae);
-  document.getElementById('aInc').textContent = 'дохід ' + fmt(ai);
-  document.getElementById('lExp').textContent = fmt(le);
-  document.getElementById('lInc').textContent = 'дохід ' + fmt(li);
-
-  var cm = {};
+  var vis=txs.filter(inPeriod);
+  function s(p,tp){ return vis.filter(function(t){ return(!p||t.person===p)&&t.type===tp; }).reduce(function(a,t){ return a+t.amount; },0); }
+  var ti=s(null,'income'),te=s(null,'expense');
+  document.getElementById('incAmt').textContent=fmt(ti);
+  document.getElementById('expAmt').textContent=fmt(te);
+  var b=ti-te,be=document.getElementById('balAmt');
+  be.textContent=(b<0?'-':'')+fmt(Math.abs(b));
+  be.style.color=b>=0?'#fff':'var(--red)';
+  var ai=s('Арсен','income'),ae=s('Арсен','expense'),li=s('Люда','income'),le=s('Люда','expense');
+  document.getElementById('aIncTag').textContent='Арсен '+fmt(ai);
+  document.getElementById('lIncTag').textContent='Люда '+fmt(li);
+  document.getElementById('aExpTag').textContent='Арсен '+fmt(ae);
+  document.getElementById('lExpTag').textContent='Люда '+fmt(le);
+  document.getElementById('aExp').textContent=fmt(ae);
+  document.getElementById('aInc').textContent='дохід '+fmt(ai);
+  document.getElementById('lExp').textContent=fmt(le);
+  document.getElementById('lInc').textContent='дохід '+fmt(li);
+  var cm={};
   vis.filter(function(t){ return t.type==='expense'; }).forEach(function(t){ cm[t.category]=(cm[t.category]||0)+t.amount; });
-  var ent = Object.entries(cm).sort(function(a,b){ return b[1]-a[1]; });
-  var cr = document.getElementById('catRows');
-  if (!ent.length) {
-    cr.innerHTML = '<div style="color:var(--text3);font-size:.75rem;">Витрат поки немає</div>';
-  } else {
-    var mx = ent[0][1];
-    cr.innerHTML = ent.map(function(e) {
-      return '<div class="cat-r"><div class="cat-top"><span class="cat-n">' + e[0] + '</span><span class="cat-v">' + fmt(e[1]) + '</span></div>' +
-        '<div class="bar-bg"><div class="bar-fill" style="width:' + (e[1]/mx*100).toFixed(1) + '%;background:' + (CAT_C[e[0]]||'#48484a') + '"></div></div></div>';
-    }).join('');
-  }
+  var ent=Object.entries(cm).sort(function(a,b){ return b[1]-a[1]; });
+  var cr=document.getElementById('catRows');
+  if(!ent.length){ cr.innerHTML='<div style="color:var(--text3);font-size:.75rem;">Витрат поки немає</div>'; }
+  else { var mx=ent[0][1]; cr.innerHTML=ent.map(function(e){ return '<div class="cat-r"><div class="cat-top"><span class="cat-n">'+e[0]+'</span><span class="cat-v">'+fmt(e[1])+'</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+(e[1]/mx*100).toFixed(1)+'%;background:'+(CAT_C[e[0]]||'#48484a')+'"></div></div></div>'; }).join(''); }
   renderList();
 }
 
-document.getElementById('monthLabel').textContent = now.toLocaleDateString('uk-UA', {month:'long', year:'numeric'});
-updateMnNav();
+// Init
+document.getElementById('todayLabel').textContent = now.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+updateMnLabel();
+setPeriod('month');
 populateCats();
 </script>
 </body>
