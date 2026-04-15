@@ -78,10 +78,28 @@
   .stat-val.b { color:var(--blue); }
 
   @media (max-width:700px) {
-    header { padding:36px 18px 0; flex-wrap:wrap; gap:12px; }
-    main { padding:0 18px; }
-    .charts-grid { grid-template-columns:1fr; }
+    header { padding:24px 16px 0; flex-wrap:wrap; gap:10px; }
+    .page-title { font-size:1.3rem; }
+    .back-btn { font-size:0.76rem; padding:6px 12px; }
+    main { padding:0 16px; margin-top:20px; gap:10px; }
+    .period-card { padding:14px 16px; }
+    .period-row { flex-wrap:wrap; gap:6px; }
+    .p-btn { flex:none; padding:0 14px; font-size:0.72rem; }
+    .chart-selector { gap:6px; }
+    .cs-btn { font-size:0.74rem; padding:0 12px; height:36px; }
+    .charts-grid { grid-template-columns:1fr; gap:10px; }
+    .chart-panel { padding:16px; }
     .chart-panel.full { grid-column:auto; }
+    .chart-title { font-size:0.85rem; }
+    .stat-row { gap:8px; }
+    .stat-val { font-size:0.95rem; }
+    .legend { gap:10px; }
+    .leg-item { font-size:0.68rem; }
+  }
+  @media (max-width:400px) {
+    .cs-btn span.cs-icon { display:none; }
+    .cs-btn { padding:0 10px; font-size:0.7rem; }
+    .p-btn { padding:0 10px; }
   }
 </style>
 </head>
